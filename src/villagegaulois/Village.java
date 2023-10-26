@@ -89,7 +89,6 @@ public class Village {
 
 		private Etal[] trouverEtals(String produit) {
 			int nbEtalsAvecProduit = 0;
-			int j = 0;
 			// calcul taille du tableau
 			for (int i = 0; i < nbEtal && etals[i].isEtalOccupe(); i++) {
 				if (etals[i].contientProduit(produit)) {
@@ -98,7 +97,7 @@ public class Village {
 			}
 
 			Etal[] etalsAvecProduit = new Etal[nbEtalsAvecProduit];
-			for (int i = 0; i < nbEtalsAvecProduit; i++) {
+			for (int i = 0, j = 0; i < nbEtalsAvecProduit; i++) {
 				if (etals[i].contientProduit(produit)) {
 					etalsAvecProduit[j] = etals[i];
 					j++;
@@ -110,7 +109,7 @@ public class Village {
 
 		private Etal trouverVendeur(Gaulois vendeur) {
 			int i;
-			for (i = 0; i < nbEtal && etals[i].getVendeur() != vendeur; i++)
+			for (i = 0; i < nbEtal && !etals[i].getVendeur().equals(vendeur); i++)
 				;
 			if (i == nbEtal) {
 				return null;
@@ -148,14 +147,19 @@ public class Village {
 	public String rechercherVendeursProduit(String produit) {
 		StringBuilder chaine = new StringBuilder();
 		Etal[] etalsAvecProduit;
-		chaine.append("Les vendeurs.es qui proposent des " + produit + " sont:\n");
 		etalsAvecProduit = marche.trouverEtals(produit);
-		for (int i = 0; i < etalsAvecProduit.length; i++) {
-			if (etalsAvecProduit[i] != null) {
-				Gaulois vendeurAvecProduit = etalsAvecProduit[i].getVendeur();
-				chaine.append("- " + vendeurAvecProduit.getNom() + "\n");
+		if (etalsAvecProduit.length == 0) {
+			chaine.append("Aucun vendeur ne propose de " + produit + "...\n");
+		} else {
+			chaine.append("Les vendeurs.es qui proposent des " + produit + " sont:\n");
+			for (int i = 0; i < etalsAvecProduit.length; i++) {
+				if (etalsAvecProduit[i] != null) {
+					Gaulois vendeurAvecProduit = etalsAvecProduit[i].getVendeur();
+					chaine.append("- " + vendeurAvecProduit.getNom() + "\n");
+				}
 			}
 		}
+		
 		return chaine.toString();
 	}
 
